@@ -2,7 +2,6 @@ import 'package:book_shop/models/ny_times_book_repository.dart';
 import 'package:book_shop/screens/info_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:book_shop/models/ny_times_book_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
@@ -36,23 +35,32 @@ class BookCatalogScreen extends StatelessWidget {
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 30),
+                          horizontal: 20,
+                          vertical: 30,
+                        ),
                         itemCount: snapshot.data!.results.books.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 20,
                           mainAxisSpacing: 20,
-                          childAspectRatio: 2 / 3,
+                          childAspectRatio: MediaQuery.of(context).size.width /
+                              (MediaQuery.of(context).size.height / 1.2),
                         ),
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => InfoScreen(
-                                    item: snapshot.data!.results.books[index],
+                                PageRouteBuilder(
+                                  transitionDuration:
+                                      const Duration(milliseconds: 500),
+                                  reverseTransitionDuration:
+                                      const Duration(milliseconds: 500),
+                                  pageBuilder: (c, a, sA) => FadeTransition(
+                                    opacity: a,
+                                    child: InfoScreen(
+                                      item: snapshot.data!.results.books[index],
+                                    ),
                                   ),
                                 ),
                               );
@@ -76,15 +84,20 @@ class BookCatalogScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Center(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.network(
-                                        snapshot.data!.results.books[index]
-                                            .bookImage,
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.5,
-                                        fit: BoxFit.cover,
+                                    child: Hero(
+                                      tag: snapshot
+                                          .data!.results.books[index].title,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          snapshot.data!.results.books[index]
+                                              .bookImage,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.5,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),

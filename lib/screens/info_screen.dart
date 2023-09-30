@@ -9,6 +9,11 @@ class InfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        leading: const BackButton(color: Colors.black),
+        backgroundColor: Colors.white,
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
@@ -19,12 +24,15 @@ class InfoScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.network(
-                    item.bookImage,
-                    height: MediaQuery.of(context).size.width * 0.8,
-                    fit: BoxFit.cover,
+                child: Hero(
+                  tag: item.title,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      item.bookImage,
+                      height: MediaQuery.of(context).size.width * 0.8,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -83,7 +91,11 @@ class InfoScreen extends StatelessWidget {
               const SizedBox(
                 height: 3,
               ),
-              ...List.generate(item.buyLinks.length, (index) => LinkText(uri: item.buyLinks[index].url, title: item.buyLinks[index].name)),
+              ...List.generate(
+                  item.buyLinks.length,
+                  (index) => LinkText(
+                      uri: item.buyLinks[index].url,
+                      title: item.buyLinks[index].name)),
             ],
           ),
         ),
